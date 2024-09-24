@@ -3,10 +3,10 @@ import base64
 import reliqua_server as rs
 import click
 import random
-import socket
 import os
 import shutil
 import platform
+import hashlib
 
 ip = rs.get_ip(True)
 pwd = os.getcwd()
@@ -44,7 +44,7 @@ class convert:
     def translate(list, message):
         count = 0
         for i in range(len(list)):
-            print(list[i])
+            # print(list[i])
             if list[i] == 1:
                 message = convert.b64(message)
                 count = count + 1
@@ -57,19 +57,27 @@ class convert:
             else:
                 return print("ERROR: Key out of range")
         return(message)
+    
+def hashed(password):
+    # Create a hash using SHA-256
+    hash_obj = hashlib.sha256(password.encode())
+    hashed_password = hash_obj.hexdigest()
+    return hashed_password
 
 @click.command()
-@click.option("-m", "--message", prompt="Your message", help="Sets your message")
-@click.option("-p", "--port", default=8080, prompt="What port to use for the server? [49152-65535]", help="Sets the port you want the server to run on")
-@click.option("-k", "--keygen", default=8, prompt="how many key gens?", help="how many combinations do you want your message to have")
+@click.option("-m", "--message", help="Sets your message")
+@click.option("-p", "--port", default=8080, help="Sets the port you want the server to run on")
+@click.option("-k", "--keygen", default=8, help="how many combinations do you want your message to have")
+@click.option("-c", "--code", help="Set the code to unlock the message")
 @click.option("-s", "--server", is_flag=False, flag_value=True, help="Runs the server in the backgroud and starts automaticly even if the computer shuts down (Linux only)")
 @click.option("-C", "--clean", is_flag=True, flag_value=True, help="Reverts back to a clean slate (THIS WILL REMOVE EVERYTHING THAT ISNT ALREADY IN THE REPO)")
-@click.option("-V", "--version", is_flag=True, help="Current version: " + str(version), )
+@click.option("-V", "--version", is_flag=True, flag_value = version, help="Current version: " + str(version), )
 
-def main(message, port, keygen, server, clean, version):
+def main(message, port, keygen, server, clean, version, code):
 
     if version:
-        exit("Current version: ", str(version))
+        print("Current version: ", str(version))
+        exit()
 
     # http://pioxy.ddns.net:3000/tibthink/minecraft-server/src/branch/main/init-server.py#L77
     if clean:
@@ -115,11 +123,15 @@ def main(message, port, keygen, server, clean, version):
         digit = str(random.randint(1, 3))
         key += digit
         print(digit, end="")
+    
+    print("\r")
 
     converted = convert.translate(convert.key(key), message)
+    hashed_code = hashed(code)
     
     data = {
         'message': converted,
+        'code': hashed_code
     }
 
     config = {
@@ -144,6 +156,8 @@ def main(message, port, keygen, server, clean, version):
     print("Send the client folder to in your directory to ")
 
     if server:
+        if type_of_os == "windows":
+            exit("Sorry, this feature is for linux based OS's")
         user = os.getlogin()
         open("reliqua.service", "w+").write("""[Unit]
 Description=Reliqua server

@@ -1,4 +1,2 @@
-pytz
 click
 requests
-psutil

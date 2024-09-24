@@ -1,16 +1,11 @@
+import hashlib
 import requests
 import json
 import base64
 from time import sleep
 import sys
 import random
-from datetime import datetime, date
-import pytz
-import datetime
 
-
-
-tz_NY = pytz.timezone('America/New_York')
 with open("config.json") as config:
     config = json.load(config)
 
@@ -69,7 +64,6 @@ class uconvert:
                 return print("ERROR: Key out of range")
         return(message)
 
-
 # http://pioxy.ddns.net:3000/tibthink/minecraft-server/src/branch/main/init-server.py#L35
 def remove_p(string):
     punctuation = '''"'''
@@ -92,5 +86,24 @@ def writing_effect(text):
         sys.stdout.flush()
         sleep(random.uniform(.01, .2))
 
-# Getting date and time and checking making sure it matches the json
-writing_effect(uconvert.translate(uconvert.key(config['key']), dump("message")))
+
+def hashed(password):
+    # Create a hash using SHA-256
+    hash_obj = hashlib.sha256(password.encode())
+    hashed_password = hash_obj.hexdigest()
+    return hashed_password
+
+try:
+    code_check = input("Please enter the code: ")
+    # Getting date and time and checking making sure it matches the json
+    if remove_p(dump("code")) == hashed(code_check):
+        print("\n")
+        writing_effect(uconvert.translate(uconvert.key(config['key']), dump("message")))
+        print("\n")
+        sleep(1)
+        print("Press ctrl + C to exit")
+        sleep(9999)
+    else:
+        exit("Sorry the code given was incorrect, Please try again")
+except KeyboardInterrupt:
+    print("\nGoodbye")
