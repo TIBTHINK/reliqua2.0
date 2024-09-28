@@ -21,7 +21,7 @@ def get_ip(local=False):
             return 'Status:', response.status_code, 'ERROR. Exiting.'
             
         data = response.json()
-
+        
         return data['ip']
 
     else:
@@ -38,9 +38,10 @@ def http_server(port):
     handling_it_like_its_1924 = http.server.SimpleHTTPRequestHandler
 
     with socketserver.TCPServer((get_ip(True), int(port)), handling_it_like_its_1924) as httpd:
-        print("serving on: " + get_ip(True) + ":" + str(port))
+        print("serving on: " + get_ip() + ":" + str(port))
         httpd.serve_forever()
 
 
 if __name__ == '__main__':
+    print(get_ip())
     http_server(dump('config.json', 'port'))

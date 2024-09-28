@@ -8,7 +8,7 @@ import shutil
 import platform
 import hashlib
 
-ip = rs.get_ip(True)
+ip = rs.get_ip()
 pwd = os.getcwd()
 system = platform.system()
 version = "2.0.1"
@@ -89,7 +89,7 @@ def main(message, port, keygen, server, clean, version, code):
             exit("Goodbye")
 
         filenames = os.listdir("./")
-        dont_remove_these_files = ["data.json", "config.json", "client/"]
+        dont_remove_these_files = ["data.json", "config.json", "./client", "./__pycache__"]
         print("###Removing needed files from delete list###")
         for i in dont_remove_these_files:
             if i in filenames:
@@ -97,18 +97,18 @@ def main(message, port, keygen, server, clean, version, code):
 
         directory = next(os.walk("./"))[1]
         directory.remove(".git")
-        clean = True
-        if clean:
-            try:
-                for i in directory:
-                    print("Removing: " + i)
-                    shutil.rmtree(i)
-                for i in filenames:
-                    print("Removing: " + i)
-                    os.remove(i)
-            except OSError as e:
+        
+    
+        try:
+            for i in directory:
+                print("Removing: " + i)
+                shutil.rmtree(i)
+            for i in filenames:
+                print("Removing: " + i)
+                os.remove(i)
+        except OSError as e:
                 print("Error: %s : %s" % (directory, e.strerror))
-        exit()
+        
 
     if keygen > 8:
         print("Warning: you are generating " + str(keygen) + " keys")

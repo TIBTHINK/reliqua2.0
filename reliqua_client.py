@@ -9,6 +9,8 @@ import random
 with open("config.json") as config:
     config = json.load(config)
 
+
+
 class uconvert:
     def b64(string):
         string = remove_p(string)
@@ -103,6 +105,7 @@ try:
         sleep(1)
         print("Press ctrl + C to exit")
         sleep(9999)
+        print("damn your left this open for 2.7 hours, really that interesting of a message")
     else:
         exit("Sorry the code given was incorrect, Please try again")
 except KeyboardInterrupt:
