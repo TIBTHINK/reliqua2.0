@@ -76,20 +76,6 @@ def hashed(password):
 
 def main(message, port, keygen, server, clean, version, code):
     
-    missing_arguments = []
-    if message is None:
-        missing_arguments.append('message')
-    if port is None:
-        missing_arguments.append('port')
-    if keygen is None:
-        missing_arguments.append('keygen')
-    if code is None:
-        missing_arguments.append('code')
-
-    if missing_arguments:
-        click.echo(f"Error: Missing argument(s): {', '.join(missing_arguments)}.")
-        sys.exit(1)
-
     if version:
         print("Current version: ", str(version))
         exit()
@@ -121,6 +107,20 @@ def main(message, port, keygen, server, clean, version, code):
                 os.remove(i)
         except OSError as e:
                 print("Error: %s : %s" % (directory, e.strerror))
+
+    missing_arguments = []
+    if message is None:
+        missing_arguments.append('message')
+    if port is None:
+        missing_arguments.append('port')
+    if keygen is None:
+        missing_arguments.append('keygen')
+    if code is None:
+        missing_arguments.append('code')
+
+    if missing_arguments:
+        click.echo(f"Error: Missing argument(s): {', '.join(missing_arguments)}.")
+        sys.exit(1)
 
     if keygen > 8:
         print("Warning: you are generating " + str(keygen) + " keys")

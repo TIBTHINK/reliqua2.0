@@ -1,0 +1,9 @@
+# Ignore config and data files (anywhere in the project)
+**/config.json
+**/data.json
+
+# Ignore the __pycache__ directory and everything inside it
+__pycache__/
+
+# Ignore the client directory and all its contents
+client/
