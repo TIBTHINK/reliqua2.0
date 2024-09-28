@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import json
 import base64
 import reliqua_server as rs
@@ -7,18 +9,17 @@ import os
 import shutil
 import platform
 import hashlib
+import sys
 
 ip = rs.get_ip()
 pwd = os.getcwd()
 system = platform.system()
-version = "2.0.1"
-
+version = "2.1.3"
 
 if system == "Windows":
     type_of_os = "windows"
 else:
     type_of_os = "unix"
-
 
 class convert:
     def b64(string):
@@ -74,6 +75,20 @@ def hashed(password):
 @click.option("-V", "--version", is_flag=True, flag_value = version, help="Current version: " + str(version), )
 
 def main(message, port, keygen, server, clean, version, code):
+    
+    missing_arguments = []
+    if message is None:
+        missing_arguments.append('message')
+    if port is None:
+        missing_arguments.append('port')
+    if keygen is None:
+        missing_arguments.append('keygen')
+    if code is None:
+        missing_arguments.append('code')
+
+    if missing_arguments:
+        click.echo(f"Error: Missing argument(s): {', '.join(missing_arguments)}.")
+        sys.exit(1)
 
     if version:
         print("Current version: ", str(version))
@@ -81,7 +96,6 @@ def main(message, port, keygen, server, clean, version, code):
 
     # http://pioxy.ddns.net:3000/tibthink/minecraft-server/src/branch/main/init-server.py#L77
     if clean:
-
         print("Warning: Using --clean will remove everything that is not whitelisted.")
         con = input("Are you sure you want to continue?[y/N]: ") or "n"
         con += " "
@@ -97,8 +111,7 @@ def main(message, port, keygen, server, clean, version, code):
 
         directory = next(os.walk("./"))[1]
         directory.remove(".git")
-        
-    
+  
         try:
             for i in directory:
                 print("Removing: " + i)
@@ -108,7 +121,6 @@ def main(message, port, keygen, server, clean, version, code):
                 os.remove(i)
         except OSError as e:
                 print("Error: %s : %s" % (directory, e.strerror))
-        
 
     if keygen > 8:
         print("Warning: you are generating " + str(keygen) + " keys")
@@ -140,7 +152,6 @@ def main(message, port, keygen, server, clean, version, code):
         'key': key,
     }
 
-
     with open('data.json', 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
     with open('config.json', 'w', encoding='utf-8') as f:
@@ -153,7 +164,8 @@ def main(message, port, keygen, server, clean, version, code):
 
     shutil.copy2('reliqua_client.py', pwd + '/client', follow_symlinks=True)
     shutil.copy2('config.json', pwd + '/client', follow_symlinks=True)
-    print("Send the client folder to in your directory to ")
+    print("Send the client folder in your directory to the target")
+    print("Remember to portforward port " + str(port)+ " on " + rs.get_ip(True))
 
     if server:
         if type_of_os == "windows":
