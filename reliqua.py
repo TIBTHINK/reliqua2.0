@@ -70,7 +70,7 @@ def hashed(password):
 @click.option("-p", "--port", default=8080, help="Sets the port you want the server to run on")
 @click.option("-k", "--keygen", default=8, help="how many combinations do you want your message to have")
 @click.option("-c", "--code", help="Set the code to unlock the message")
-@click.option("-s", "--server", is_flag=False, flag_value=True, help="Runs the server in the backgroud and starts automaticly even if the computer shuts down (Linux only)")
+@click.option("-s", "--server", is_flag=True, flag_value=True, help="Runs the server in the backgroud and starts automaticly even if the computer shuts down (Linux only)")
 @click.option("-C", "--clean", is_flag=True, flag_value=True, help="Reverts back to a clean slate (THIS WILL REMOVE EVERYTHING THAT ISNT ALREADY IN THE REPO)")
 @click.option("-L", "--local", is_flag=True, flag_value=True, help="Sets the config ip to your local address (Good for testing before using)")
 @click.option("-V", "--version", is_flag=True, flag_value = version, help="Current version: " + str(version), )
@@ -91,25 +91,26 @@ def main(message, port, keygen, server, clean, version, code, local):
         if con[0].lower() == "n":
             exit("Goodbye")
 
-        filenames = os.listdir("./")
-        dont_remove_these_files = ["data.json", "config.json", "./client", "./__pycache__"]
-        print("###Removing needed files from delete list###")
-        for i in dont_remove_these_files:
-            if i in filenames:
-                filenames.remove(i)
-
-        directory = next(os.walk("./"))[1]
-        directory.remove(".git")
-  
-        try:
-            for i in directory:
-                print("Removing: " + i)
-                shutil.rmtree(i)
-            for i in filenames:
-                print("Removing: " + i)
-                os.remove(i)
-        except OSError as e:
-                print("Error: %s : %s" % (directory, e.strerror))
+        item_list = [
+            "config.json",
+            "data.json",
+            "__pycache__/",
+            "client/"
+        ]
+        
+        for item in item_list:
+                try:
+                    if os.path.isfile(item):
+                        os.remove(item)  # Remove file
+                        print(f"File removed: {item}")
+                    elif os.path.isdir(item):
+                        shutil.rmtree(item)  # Remove folder and its contents
+                        print(f"Folder removed: {item}")
+                    else:
+                        print(f"Path not found: {item}")
+                except Exception as e:
+                    print(f"Error while removing {item}: {e}")
+        exit("All items have been completly obliterated")
 
     missing_arguments = []
     if message is None:
