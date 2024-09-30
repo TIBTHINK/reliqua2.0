@@ -34,11 +34,11 @@ def get_ip(local=False):
         s.close()
         return ip
 
-def http_server(port):
+def http_server(port, local):
     handling_it_like_its_1924 = http.server.SimpleHTTPRequestHandler
 
     with socketserver.TCPServer((get_ip(True), int(port)), handling_it_like_its_1924) as httpd:
-        print("serving on: " + get_ip() + ":" + str(port))
+        print("serving on: " + get_ip(local) + ":" + str(port))
         httpd.serve_forever()
 
 

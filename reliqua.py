@@ -72,10 +72,13 @@ def hashed(password):
 @click.option("-c", "--code", help="Set the code to unlock the message")
 @click.option("-s", "--server", is_flag=False, flag_value=True, help="Runs the server in the backgroud and starts automaticly even if the computer shuts down (Linux only)")
 @click.option("-C", "--clean", is_flag=True, flag_value=True, help="Reverts back to a clean slate (THIS WILL REMOVE EVERYTHING THAT ISNT ALREADY IN THE REPO)")
+@click.option("-L", "--local", is_flag=True, flag_value=True, help="Sets the config ip to your local address (Good for testing before using)")
 @click.option("-V", "--version", is_flag=True, flag_value = version, help="Current version: " + str(version), )
 
-def main(message, port, keygen, server, clean, version, code):
-    
+def main(message, port, keygen, server, clean, version, code, local):
+
+    ip = rs.get_ip(local)
+
     if version:
         print("Current version: ", str(version))
         exit()
@@ -193,7 +196,7 @@ WantedBy=multi-user.target
         os.system("sudo systemctl start reliqua.service")
         os.system("sudo systemctl enable reliqua.service")
     else:
-        rs.http_server(port)
+        rs.http_server(port, local)
 
 if __name__ == '__main__':
     main()
