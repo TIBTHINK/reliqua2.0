@@ -14,7 +14,7 @@ import sys
 ip = rs.get_ip()
 pwd = os.getcwd()
 system = platform.system()
-version = "2.1.3"
+version = "2.1.4"
 
 if system == "Windows":
     type_of_os = "windows"
@@ -80,8 +80,8 @@ def main(message, port, keygen, server, clean, version, code, local):
     ip = rs.get_ip(local)
 
     if version:
-        print("Current version: ", str(version))
-        exit()
+        exit("Current version: ", str(version))
+        
 
     # http://pioxy.ddns.net:3000/tibthink/minecraft-server/src/branch/main/init-server.py#L77
     if clean:
