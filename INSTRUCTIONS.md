@@ -2,7 +2,7 @@
 
 to use the reliqua client you first need python3 \
 first you need to install [python](https://www.python.org/downloads/). \
-selecet the most recent realse and install it \
+selecet the most recent realse and install it 
 
 take the zipped file and extract its contents. \
 open a command prompt and run this command
