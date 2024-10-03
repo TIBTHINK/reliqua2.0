@@ -154,7 +154,7 @@ if __name__ == '__main__':
             sleep(1)
             print("Press ctrl + C to exit")
             sleep(9999)
-            print("damn your left this open for 2.7 hours, really that interesting of a message")
+            print("damn you left this open for 2.7 hours, must be a really interesting message")
         else:
             exit("Sorry the code given was incorrect, Please try again")
     except KeyboardInterrupt:
