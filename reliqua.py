@@ -14,7 +14,7 @@ import sys
 ip = rs.get_ip()
 pwd = os.getcwd()
 system = platform.system()
-version = "2.1.4"
+version = "2.1.5"
 
 if system == "Windows":
     type_of_os = "windows"
@@ -71,11 +71,12 @@ def hashed(password):
 @click.option("-k", "--keygen", default=8, help="how many combinations do you want your message to have")
 @click.option("-c", "--code", help="Set the code to unlock the message")
 @click.option("-s", "--server", is_flag=True, flag_value=True, help="Runs the server in the backgroud and starts automaticly even if the computer shuts down (Linux only)")
+@click.option("-z", "--zip", is_flag=True, flag_value=True, help="(optional) Will zip the client directory so it can be shared")
 @click.option("-C", "--clean", is_flag=True, flag_value=True, help="Reverts back to a clean slate (THIS WILL REMOVE EVERYTHING THAT ISNT ALREADY IN THE REPO)")
 @click.option("-L", "--local", is_flag=True, flag_value=True, help="Sets the config ip to your local address (Good for testing before using)")
 @click.option("-V", "--version", is_flag=True, flag_value = version, help="Current version: " + str(version), )
 
-def main(message, port, keygen, server, clean, version, code, local):
+def main(message, port, keygen, server, clean, version, code, local, zip):
 
     ip = rs.get_ip(local)
 
@@ -95,20 +96,21 @@ def main(message, port, keygen, server, clean, version, code, local):
             "config.json",
             "data.json",
             "__pycache__/",
-            "client/"
+            "client/",
+            "client.zip"
         ]
         
         for item in item_list:
-                try:
-                    if os.path.isfile(item):
-                        os.remove(item)  # Remove file
-                        print(f"File removed: {item}")
-                    elif os.path.isdir(item):
-                        shutil.rmtree(item)  # Remove folder and its contents
-                        print(f"Folder removed: {item}")
-                    else:
-                        print(f"Path not found: {item}")
-                except Exception as e:
+            try:
+                if os.path.isfile(item):
+                    os.remove(item)  # Remove file
+                    print(f"File removed: {item}")
+                elif os.path.isdir(item):
+                    shutil.rmtree(item)  # Remove folder and its contents
+                    print(f"Folder removed: {item}")
+                else:
+                    print(f"Path not found: {item}")
+            except Exception as e:
                     print(f"Error while removing {item}: {e}")
         exit("All items have been completly obliterated")
 
@@ -168,6 +170,13 @@ def main(message, port, keygen, server, clean, version, code, local):
 
     shutil.copy2('reliqua_client.py', pwd + '/client', follow_symlinks=True)
     shutil.copy2('config.json', pwd + '/client', follow_symlinks=True)
+    shutil.copy2("INSTRUCTIONS.md", pwd + '/client', follow_symlinks=True)
+    
+    if zip:
+        print("zipping folder")
+        shutil.make_archive("client/", 'zip', "client")
+        print("folder zipped and ready to ship")
+        
     print("Send the client folder in your directory to the target")
     print("Remember to portforward port " + str(port)+ " on " + rs.get_ip(True))
 

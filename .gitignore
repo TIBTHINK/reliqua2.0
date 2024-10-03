@@ -1,6 +1,7 @@
 # Ignore config and data files (anywhere in the project)
 **/config.json
 **/data.json
+**/client.zip
 
 # Ignore the __pycache__ directory and everything inside it
 __pycache__/
