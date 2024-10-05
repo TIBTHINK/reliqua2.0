@@ -50,20 +50,29 @@ def progress_bar_with_spinner(total=100):
         bar = 'Loading: [' + '#' * (i // 4) + ' ' * ((100 - i) // 4) + ']'
         sys.stdout.write(f'\r{bar} {i}% {spinner[i % 4]}')
         sys.stdout.flush()
-        sleep(0.08)
+        sleep(0.01)
 
+
+import base64
 
 class uconvert:
+    @staticmethod
+    def remove_p(string):
+        # Assuming remove_p is meant to clean up the string; adjust as necessary
+        return string.strip()  # Example: just strips whitespace, modify if needed.
+
+    @staticmethod
     def b64(string):
-        string = remove_p(string)
-        return base64.b64decode(string).decode('utf-8')
+        string = uconvert.remove_p(string)
+        try:
+            return base64.b64decode(string).decode('utf-8')
+        except (UnicodeDecodeError, base64.binascii.Error) as e:
+            print(f"Base64 decoding error: {e}")
+            return None  # Or handle the error as needed
 
-    def b32(string):
-        string = remove_p(string)
-        return base64.b32encode(bytearray(string, 'ascii')).decode('utf-8')
-
+    @staticmethod
     def binary(string):
-        string = remove_p(string)
+        string = uconvert.remove_p(string)
         binary = string.split()
         asciiString = ""
         for i in binary:
@@ -72,41 +81,56 @@ class uconvert:
             asciiString += asciiCharacter
         return asciiString
 
+    @staticmethod
     def ascii(string):
-        string = remove_p(string)
+        string = uconvert.remove_p(string)
         li = list(string.split(" "))
-        ascii_out = []
-        for i in li:
-            ascii_out.append(chr(int(i)))
-        output = ""
-        # convert to string
-        return output.join(ascii_out)
+        ascii_out = [chr(int(i)) for i in li]
+        return "".join(ascii_out)
 
+    @staticmethod
+    def hex(string):
+        try:
+            return bytes.fromhex(string).decode("utf-8")
+        except UnicodeDecodeError as e:
+            print(f"Hex decoding error: {e}")
+            return None  # Or handle the error as needed
+    
+    @staticmethod
+    def octal(string):
+    # Split the input string into individual octal values
+        print(string)
+        octal_values = string.split()
+        
+        # Convert each octal value to its corresponding character
+        characters = [chr(int(oct_value, 8)) for oct_value in octal_values]
+        
+        # Join the characters to form the original text
+        return ''.join(characters)
+
+    @staticmethod
     def key(key):
-        key_out = []
-        for i in key:
-            key_out.append(int(i))
+        key_out = [int(i) for i in key]
         return list(reversed(key_out))
 
+    @staticmethod
     def translate(list, message):
         for i in range(len(list)):
-            # print(i)
-            # print(list[i])
-            # if i == 0:
             if list[i] == 1:
                 message = uconvert.b64(message)
-                # print(message)
             elif list[i] == 2:
                 message = uconvert.ascii(message)
-                # print(message)
             elif list[i] == 3:
                 message = uconvert.binary(message)
-                # print(message)
-            # elif list[i] == 4:
-                # print("test")
+            elif list[i] == 4:
+                message = uconvert.hex(message)
+            # elif list[i] == 5:
+            #     message = uconvert.octal(message)
             else:
-                return print("ERROR: Key out of range")
-        return(message)
+                print("ERROR: Key out of range")
+                return None
+        return message
+
 
 # http://pioxy.ddns.net:3000/tibthink/minecraft-server/src/branch/main/init-server.py#L35
 def remove_p(string):
@@ -137,6 +161,15 @@ def hashed(password):
     hashed_password = hash_obj.hexdigest()
     return hashed_password
 
+def check_password(hashed_code):
+    while True:  # Start an infinite loop
+        code_check = input("Enter your password: ")  
+        if remove_p(dump("code")) == hashed(code_check):  
+            print("Access granted!")
+            break
+        else:
+            print("Incorrect password, please try again.\n")
+
 if __name__ == '__main__':
     print("\n")
     fetch_data()
@@ -145,17 +178,17 @@ if __name__ == '__main__':
     progress_bar_with_spinner()
     print("\n")
     try:
-        code_check = input("Please enter the code: ")
-        # Getting date and time and checking making sure it matches the json
-        if remove_p(dump("code")) == hashed(code_check):
-            print("\n")
-            writing_effect(uconvert.translate(uconvert.key(config['key']), dump("message")))
-            print("\n")
-            sleep(1)
-            print("Press ctrl + C to exit")
-            sleep(9999)
-            print("damn you left this open for 2.7 hours, must be a really interesting message")
-        else:
-            exit("Sorry the code given was incorrect, Please try again")
+        # Getting the hashed code directly from the dump function
+        code_to_check = remove_p(dump("code"))
+        check_password(code_to_check)  # Use the fetched code for checking
+        print("\n")
+        message = uconvert.translate(uconvert.key(config['key']), dump("message"))
+        writing_effect(message)
+        print("\n")
+        sleep(1)
+        print("Press ctrl + C to exit")
+        sleep(9999)
+        exit("damn you left this open for 2.7 hours, must be a really interesting message")
+
     except KeyboardInterrupt:
         print("\nGoodbye")

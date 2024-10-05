@@ -18,23 +18,48 @@ version = "2.1.6"
 
 if system == "Windows":
     type_of_os = "windows"
+elif system == "darwin":
+    type_of_os = "darwin"
 else:
     type_of_os = "unix"
 
+import base64
+
+def remove_p(string):
+    punctuation = '''"'''
+    remove_punct = """"""
+    for character in string:
+        if character not in punctuation:
+            remove_punct = remove_punct + character
+    return remove_punct
+
 class convert:
+    @staticmethod
     def b64(string):
-        return base64.b64encode(bytearray(string, 'ascii')).decode('utf-8')
+        # Convert string to bytes and then to Base64
+        return base64.b64encode(string.encode('utf-8')).decode('utf-8')
 
+    @staticmethod
     def ascii(string):
-        ascii_out = []
-        for i in string:
-            ascii_out.append(str(ord(i)))
-        output = " "
-        # convert to string
-        return output.join(ascii_out)
+        ascii_out = [str(ord(i)) for i in string]
+        return " ".join(ascii_out)
 
+    @staticmethod
     def binary(string):
-        return ' '.join(format(ord(x), 'b') for x in string)
+        return remove_p(' '.join(format(ord(x), 'b') for x in string))
+
+    @staticmethod
+    def hex(string):
+        # Convert string to hex
+        hex_string = string.encode("utf-8").hex()
+        # Add spaces every 2 characters
+        spaced_hex_string = ' '.join(hex_string[i:i + 2] for i in range(0, len(hex_string), 2))
+        return spaced_hex_string
+
+    
+    def octal(string):
+        octal_values = [format(ord(char), 'o') for char in string]
+        return ' '.join(octal_values)
 
     def key(key):
         key_out = []
@@ -42,22 +67,30 @@ class convert:
             key_out.append(int(i))
         return key_out
 
+
+    @staticmethod
     def translate(list, message):
         count = 0
         for i in range(len(list)):
-            # print(list[i])
             if list[i] == 1:
                 message = convert.b64(message)
-                count = count + 1
+                count += 1
             elif list[i] == 2:
                 message = convert.ascii(message)
-                count = count + 1
+                count += 1
             elif list[i] == 3:
                 message = convert.binary(message)
-                count = count + 1
+                count += 1
+            elif list[i] == 4:
+                message = convert.hex(message)
+                count += 1
+            # elif list[i] == 5:
+            #     message = convert.octal(message)
+            #     count += 1    
             else:
                 return print("ERROR: Key out of range")
-        return(message)
+        return message
+
     
 def hashed(password):
     # Create a hash using SHA-256
@@ -138,7 +171,7 @@ def main(message, port, keygen, server, clean, version, code, local, zip):
     key = ""
     print("Generating key: ", end="")  # Print message without new line
     for i in range(keygen):
-        digit = str(random.randint(1, 3))
+        digit = str(random.randint(1, 4))
         key += digit
         print(digit, end="")
     
