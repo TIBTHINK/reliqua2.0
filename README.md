@@ -20,11 +20,13 @@ Options:
   -s, --server          Runs the server in the backgroud and starts
                         automaticly even if the computer shuts down (Linux
                         only)
+  -z, --zip             (optional) Will zip the client directory so it can be
+                        shared
   -C, --clean           Reverts back to a clean slate (THIS WILL REMOVE
                         EVERYTHING THAT ISNT ALREADY IN THE REPO)
   -L, --local           Sets the config ip to your local address (Good for
                         testing before using)
-  -V, --version         Current version: 2.1.3
+  -V, --version         Current version: 2.1.6
   --help                Show this message and exit.
 
 ```
