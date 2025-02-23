@@ -40,3 +40,10 @@ sudo ./setup.sh
 ```
 Simple as that. if there are any errors please make a issue ticket and i will \
 try to respond to it as soon as possible
+
+### Windows (Beta)
+this should work for setting up for windows. \
+if any errors occure please make a issue ticket and i will \
+respond to it as soon as i am able too \
+
+to run this just click on the file and run it
