@@ -118,15 +118,6 @@ def zip_folder(folder_path, output_filename):
 @click.option("-L", "--local", is_flag=True, flag_value=True, help="Sets the config ip to your local address (Good for testing before using)")
 @click.option("-V", "--version", is_flag=True, flag_value = version, help="Current version: " + str(version), )
 
-
-# if message or code == False:
-#     if message == False:
-#         exit("Message is missing")
-#     elif code == False:
-#         exit("Code is missing")
-#     else:
-#         exit("Message and Code is missing")
-
 def main(message, port, keygen, server, clean, version, code, local, zip):
 
 
