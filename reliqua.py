@@ -238,7 +238,7 @@ def main(message, port, keygen, server, clean, version, code, local, zip):
     else:
         print("Send the client folder in your directory to the target") 
     
-    print("Remember to portforward port " + str(port)+ " on " + rs.get_ip(True))
+    print("Remember to port forward port " + str(port)+ " on " + rs.get_ip(True))
 
     if server:
         if type_of_os == "windows":
