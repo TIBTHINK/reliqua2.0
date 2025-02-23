@@ -23,6 +23,8 @@ IF %ERRORLEVEL% NEQ 0 (
     python -m ensurepip --default-pip
 ) ELSE (
     echo pip is already installed.
+    echo Checking for pip updates...
+    python -m pip install --upgrade pip
 )
 
 :: Install dependencies if requirements.txt exists
