@@ -34,7 +34,7 @@ Options:
 ## Installing 
 
 Ive made a script to do all the heavy lifiting. \
-To use it type in the following command into the shell. \
+To use it type in the following command into the shell.
 ```sh
 sudo ./setup.sh
 ```
