@@ -31,3 +31,12 @@ Options:
 
 ```
 
+## Installing 
+
+Ive made a script to do all the heavy lifiting. \
+To use it type in the following command into the shell. \
+```sh
+sudo ./setup.sh
+```
+Simple as that. if there are any errors please make a issue ticket and i will \
+try to respond to it as soon as possible

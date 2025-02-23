@@ -49,17 +49,17 @@ class convert:
         return remove_p(' '.join(format(ord(x), 'b') for x in string))
 
     @staticmethod
-    def hex(string):
-        # Convert string to hex
-        hex_string = string.encode("utf-8").hex()
-        # Add spaces every 2 characters
-        spaced_hex_string = ' '.join(hex_string[i:i + 2] for i in range(0, len(hex_string), 2))
-        return spaced_hex_string
+    # def hex(string):
+    #     # Convert string to hex
+    #     hex_string = string.encode("utf-8").hex()
+    #     # Add spaces every 2 characters
+    #     spaced_hex_string = ' '.join(hex_string[i:i + 2] for i in range(0, len(hex_string), 2))
+    #     return spaced_hex_string
 
     
-    def octal(string):
-        octal_values = [format(ord(char), 'o') for char in string]
-        return ' '.join(octal_values)
+    # def octal(string):
+    #     octal_values = [format(ord(char), 'o') for char in string]
+    #     return ' '.join(octal_values)
 
     def key(key):
         key_out = []
@@ -81,9 +81,9 @@ class convert:
             elif list[i] == 3:
                 message = convert.binary(message)
                 count += 1
-            elif list[i] == 4:
-                message = convert.hex(message)
-                count += 1
+            # elif list[i] == 4:
+            #     message = convert.hex(message)
+            #     count += 1
             # elif list[i] == 5:
             #     message = convert.octal(message)
             #     count += 1    
@@ -182,7 +182,7 @@ def main(message, port, keygen, server, clean, version, code, local, zip):
     key = ""
     print("Generating key: ", end="")  # Print message without new line
     for i in range(keygen):
-        digit = str(random.randint(1, 4))
+        digit = str(random.randint(1, 3))
         key += digit
         print(digit, end="")
     
