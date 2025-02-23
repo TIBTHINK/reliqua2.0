@@ -1,14 +1,56 @@
-<h1 id="how-to-use">How to use</h1>
-<ol>
-<li><p>to use the reliqua client you first need python3 
-first you need to install <a href="https://www.python.org/downloads/">python</a>.
-selecet the most recent realse and install it </p>
-</li>
-<li><p>take the zipped file and extract its contents. 
-open a command prompt in the folder you just extrtacted and run this command</p>
-<pre><code>PS C:<span class="hljs-symbol">\U</span>sers<span class="hljs-symbol">\b</span>ent2<span class="hljs-symbol">\D</span>ownloads<span class="hljs-symbol">\c</span>lient&gt; pip install requests
-</code></pre></li>
-<li>after that you can now run the sript by using this command</li>
-</ol>
-<pre><code>PS C:<span class="hljs-symbol">\U</span>sers<span class="hljs-symbol">\b</span>ent2<span class="hljs-symbol">\D</span>ownloads<span class="hljs-symbol">\c</span>lient&gt; python3 .<span class="hljs-symbol">\r</span>eliqua_client.py
-</code></pre>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Script Instructions</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        code {
+            background-color: #333;
+            padding: 5px;
+            border-radius: 5px;
+            color: lightgreen;
+            display: block;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="how-to-use">How to use</h1>
+    <h2 id="windows-beta-">Windows (beta)</h2>
+    <ol>
+        <li>
+            <p>Open a command prompt as an admin and run the startup script:</p>
+            <pre><code class="lang-cmd">C:\Users\tibthnk\reliqua2.0> setup.bat</code></pre>
+            <p>If everything goes right you should be able to continue to the next step.</p>
+        </li>
+        <li>
+            <p>In a new command prompt (unless Python 3 was already installed), run this command to start the main program:</p>
+            <pre><code class="lang-cmd">C:\Users\tibthink\reliqua2.0> python3 reliqua_client.py</code></pre>
+        </li>
+        <li>
+            <p>The script should run after that. It will prompt you for a password. If you do not have the password, ask the person who sent you this and request the password.</p>
+        </li>
+    </ol>
+    <h2 id="linux-macos">Linux/MacOS</h2>
+    <ol>
+        <li>
+            <p>Open a terminal and run the following command (you need sudo/root privileges to run this):</p>
+            <pre><code class="lang-sh">tibthink@hal:~/reliqua2.0$ sudo ./setup.sh</code></pre>
+        </li>
+        <li>
+            <p>After that has completed successfully, you are now ready to run the script by executing the following command:</p>
+            <pre><code class="lang-sh">tibthink@hal:~/reliqua2.0$ python3 reliqua_client.py</code></pre>
+        </li>
+        <li>
+            <p>The script should run after that. It will prompt you for a password. If you do not have the password, ask the person who sent you this and request the password.</p>
+        </li>
+    </ol>
+</body>
+</html>
