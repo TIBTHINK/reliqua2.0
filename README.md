@@ -50,3 +50,10 @@ C:\Users\tibthnk\reliqua2.0> setup.bat
 ```
 if any errors occure please make a issue ticket and i will \
 respond to it as soon as i am able too 
+
+## Known bugs
+
+* Sometimes the encoding and decoding dont work, if this happens \
+just rerun the script and it should work it self out. \
+if possible please upload the error message to the issues panel \
+and give as much detail you can give.
