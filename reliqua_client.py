@@ -179,6 +179,7 @@ if __name__ == '__main__':
     print("\n")
     try:
         # Getting the hashed code directly from the dump function
+        print(remove_p(dump("hint")))
         code_to_check = remove_p(dump("code"))
         check_password(code_to_check)  # Use the fetched code for checking
         print("\n")
