@@ -15,7 +15,7 @@ import zipfile
 ip = rs.get_ip()
 pwd = os.getcwd()
 system = platform.system()
-version = "2.1.6"
+version = "2.2.0"
 
 if system == "Windows":
     type_of_os = "windows"
@@ -112,7 +112,7 @@ def zip_folder(folder_path, output_filename):
 @click.option("-p", "--port", default=8080, help="Sets the port you want the server to run on")
 @click.option("-k", "--keygen", default=8, help="how many combinations do you want your message to have")
 @click.option("-c", "--code", help="Set the code to unlock the message")
-@click.option("-H", "--hint", help="Sets a hint for what the code might be")
+@click.option("-H", "--hint", default="No hint was provided", help="Sets a hint for what the code might be")
 @click.option("-s", "--server", is_flag=True, flag_value=True, help="Runs the server in the backgroud and starts automaticly even if the computer shuts down (Linux only)")
 @click.option("-z", "--zip", is_flag=True, flag_value=True, help="(optional) Will zip the client directory so it can be shared")
 @click.option("-C", "--clean", is_flag=True, flag_value=True, help="Reverts back to a clean slate (THIS WILL REMOVE EVERYTHING THAT ISNT ALREADY IN THE REPO)")

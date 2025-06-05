@@ -143,8 +143,8 @@ def remove_p(string):
 def dump(object):
     response = requests.get("http://" + config["ip"] + ":" + str(config["port"]) + "/data.json")
     output = response.json()
-    data = json.dumps(output[object])
-    return data
+    # data = json.dumps(output[object])
+    return output[object]
 
 # Type writting effect
 # https://stackoverflow.com/a/59401383
@@ -163,7 +163,7 @@ def hashed(password):
 
 def check_password(hashed_code):
     while True:  # Start an infinite loop
-        code_check = input("Enter your password: ")  
+        code_check = input("Enter the password: ")  
         if remove_p(dump("code")) == hashed(code_check):  
             print("Access granted!")
             break
@@ -179,7 +179,7 @@ if __name__ == '__main__':
     print("\n")
     try:
         # Getting the hashed code directly from the dump function
-        print(remove_p(dump("hint")))
+        print("Hint: " + remove_p(dump("hint")))
         code_to_check = remove_p(dump("code"))
         check_password(code_to_check)  # Use the fetched code for checking
         print("\n")

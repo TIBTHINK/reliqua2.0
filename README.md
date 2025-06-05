@@ -17,6 +17,7 @@ Options:
   -p, --port INTEGER    Sets the port you want the server to run on
   -k, --keygen INTEGER  how many combinations do you want your message to have
   -c, --code TEXT       Set the code to unlock the message
+  -H, --hint TEXT       Sets a hint for what the code might be
   -s, --server          Runs the server in the backgroud and starts
                         automaticly even if the computer shuts down (Linux
                         only)
