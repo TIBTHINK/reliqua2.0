@@ -220,7 +220,7 @@ def main(message, port, keygen, server, clean, version, code, hint, local, zip):
     shutil.copy2('config.json', pwd + '/client', follow_symlinks=True)
     shutil.copy2("INSTRUCTIONS.html", pwd + '/client', follow_symlinks=True)
     shutil.copy2("setup.sh", pwd + '/client' ,follow_symlinks=True)
-    shutil.copy2("setup.sh", pwd + '/client' ,follow_symlinks=True)
+    shutil.copy2("setup.bat", pwd + '/client' ,follow_symlinks=True)
 
     
     if zip:
