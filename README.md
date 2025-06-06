@@ -6,6 +6,13 @@ the locked timer and date feature never really worked. also isnt that secure \
 so i scrapted it and its working on a code system \
 it makes it easier (on my end) and more userfriendly
 
+## Features
+* Message supports multi-line messages
+* Converts message from 3 diffrent encodings (for now)
+* The code word is encrypted by a hash and if wanted a hint is a option
+* Zips all the required files in a file (if wanted)
+* For testing you can change the link ip to local
+
 ## How to use
 
 ```sh
@@ -52,9 +59,3 @@ C:\Users\tibthnk\reliqua2.0> setup.bat
 if any errors occure please make a issue ticket and i will \
 respond to it as soon as i am able too 
 
-## Known bugs
-
-* Sometimes the encoding and decoding dont work, if this happens \
-just rerun the script and it should work it self out. \
-if possible please upload the error message to the issues panel \
-and give as much detail you can give.
