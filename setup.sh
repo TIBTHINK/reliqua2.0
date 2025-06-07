@@ -37,7 +37,6 @@ install_macos() {
   }
 }
 
-# Install Python tools based on OS
 install_python_tools() {
   if [ -f /etc/debian_version ]; then
     install_debian
@@ -48,7 +47,7 @@ install_python_tools() {
   else
     echo "Unsupported operating system. Please install python3 and pip manually."
     exit 1
-  }
+  fi
 }
 
 # Check and install python3/pip3
