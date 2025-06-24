@@ -8,8 +8,9 @@ it makes it easier (on my end) and more userfriendly
 
 ## Features
 * Message supports multi-line messages
-* Converts message from 3 diffrent encodings (for now)
-* The code word is encrypted by a hash and if wanted a hint is a option
+* Converts message from 5 diffrent encodings
+* The code word is encrypted by a hash
+* The hint is also encoded with the same key as the message
 * Zips all the required files in a file (if wanted)
 * For testing you can change the link ip to local
 
@@ -25,16 +26,13 @@ Options:
   -k, --keygen INTEGER  how many combinations do you want your message to have
   -c, --code TEXT       Set the code to unlock the message
   -H, --hint TEXT       Sets a hint for what the code might be
-  -s, --server          Runs the server in the backgroud and starts
-                        automaticly even if the computer shuts down (Linux
-                        only)
   -z, --zip             (optional) Will zip the client directory so it can be
                         shared
   -C, --clean           Reverts back to a clean slate (THIS WILL REMOVE
                         EVERYTHING THAT ISNT ALREADY IN THE REPO)
   -L, --local           Sets the config ip to your local address (Good for
                         testing before using)
-  -V, --version         Current version: 2.1.6
+  -V, --version         Current version: 2.2.1
   --help                Show this message and exit.
 
 ```

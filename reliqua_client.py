@@ -22,7 +22,8 @@ def fetch_data():
     except requests.exceptions.RequestException as e:
         exit("Error Code: An error occurred.")
     except Exception as e:
-        exit("Error Code: Unexpected error.")
+        exit("""Error Code: Unexpected error.
+             Please make sure that you port forward.""")
 
 def print_ascii_art():
     ascii_art = [
@@ -88,25 +89,25 @@ class uconvert:
         ascii_out = [chr(int(i)) for i in li]
         return "".join(ascii_out)
 
-    # @staticmethod
-    # def hex(string):
-    #     try:
-    #         return bytes.fromhex(string).decode("utf-8")
-    #     except UnicodeDecodeError as e:
-    #         print(f"Hex decoding error: {e}")
-    #         return None  # Or handle the error as needed
+    @staticmethod
+    def hex(string):
+        try:
+            return bytes.fromhex(string).decode("utf-8")
+        except UnicodeDecodeError as e:
+            print(f"Hex decoding error: {e}")
+            return None  # Or handle the error as needed
     
-    # @staticmethod
-    # def octal(string):
-    # # Split the input string into individual octal values
-    #     print(string)
-    #     octal_values = string.split()
+    @staticmethod
+    def octal(string):
+    # Split the input string into individual octal values
+        # print(string)
+        octal_values = string.split()
         
-    #     # Convert each octal value to its corresponding character
-    #     characters = [chr(int(oct_value, 8)) for oct_value in octal_values]
+        # Convert each octal value to its corresponding character
+        characters = [chr(int(oct_value, 8)) for oct_value in octal_values]
         
-    #     # Join the characters to form the original text
-    #     return ''.join(characters)
+        # Join the characters to form the original text
+        return ''.join(characters)
 
     @staticmethod
     def key(key):
@@ -122,10 +123,10 @@ class uconvert:
                 message = uconvert.ascii(message)
             elif list[i] == 3:
                 message = uconvert.binary(message)
-            # elif list[i] == 4:
-            #     message = uconvert.hex(message)
-            # elif list[i] == 5:
-            #     message = uconvert.octal(message)
+            elif list[i] == 4:
+                message = uconvert.hex(message)
+            elif list[i] == 5:
+                message = uconvert.octal(message)
             else:
                 print("ERROR: Key out of range")
                 return None
@@ -179,7 +180,7 @@ if __name__ == '__main__':
     print("\n")
     try:
         # Getting the hashed code directly from the dump function
-        print("Hint: " + remove_p(dump("hint")))
+        print("Hint: " + uconvert.translate(uconvert.key(config['key']), dump("hint")))
         code_to_check = remove_p(dump("code"))
         check_password(code_to_check)  # Use the fetched code for checking
         print("\n")

@@ -15,7 +15,7 @@ import zipfile
 ip = rs.get_ip()
 pwd = os.getcwd()
 system = platform.system()
-version = "2.2.0"
+version = "2.2.1"
 
 if system == "Windows":
     type_of_os = "windows"
@@ -50,17 +50,17 @@ class convert:
         return remove_p(' '.join(format(ord(x), 'b') for x in string))
 
     @staticmethod
-    # def hex(string):
-    #     # Convert string to hex
-    #     hex_string = string.encode("utf-8").hex()
-    #     # Add spaces every 2 characters
-    #     spaced_hex_string = ' '.join(hex_string[i:i + 2] for i in range(0, len(hex_string), 2))
-    #     return spaced_hex_string
+    def hex(string):
+        # Convert string to hex
+        hex_string = string.encode("utf-8").hex()
+        # Add spaces every 2 characters
+        spaced_hex_string = ' '.join(hex_string[i:i + 2] for i in range(0, len(hex_string), 2))
+        return spaced_hex_string
 
     
-    # def octal(string):
-    #     octal_values = [format(ord(char), 'o') for char in string]
-    #     return ' '.join(octal_values)
+    def octal(string):
+        octal_values = [format(ord(char), 'o') for char in string]
+        return ' '.join(octal_values)
 
     def key(key):
         key_out = []
@@ -82,12 +82,12 @@ class convert:
             elif list[i] == 3:
                 message = convert.binary(message)
                 count += 1
-            # elif list[i] == 4:
-            #     message = convert.hex(message)
-            #     count += 1
-            # elif list[i] == 5:
-            #     message = convert.octal(message)
-            #     count += 1    
+            elif list[i] == 4:
+                message = convert.hex(message)
+                count += 1
+            elif list[i] == 5:
+                message = convert.octal(message)
+                count += 1    
             else:
                 return print("ERROR: Key out of range")
         return message
@@ -113,13 +113,13 @@ def zip_folder(folder_path, output_filename):
 @click.option("-k", "--keygen", default=8, help="how many combinations do you want your message to have")
 @click.option("-c", "--code", help="Set the code to unlock the message")
 @click.option("-H", "--hint", default="No hint was provided", help="Sets a hint for what the code might be")
-@click.option("-s", "--server", is_flag=True, flag_value=True, help="Runs the server in the backgroud and starts automaticly even if the computer shuts down (Linux only)")
+# @click.option("-s", "--server", is_flag=True, flag_value=True, help="Runs the server in the backgroud and starts automaticly even if the computer shuts down (Linux only)")
 @click.option("-z", "--zip", is_flag=True, flag_value=True, help="(optional) Will zip the client directory so it can be shared")
 @click.option("-C", "--clean", is_flag=True, flag_value=True, help="Reverts back to a clean slate (THIS WILL REMOVE EVERYTHING THAT ISNT ALREADY IN THE REPO)")
 @click.option("-L", "--local", is_flag=True, flag_value=True, help="Sets the config ip to your local address (Good for testing before using)")
 @click.option("-V", "--version", is_flag=True, flag_value = version, help="Current version: " + str(version), )
 
-def main(message, port, keygen, server, clean, version, code, hint, local, zip):
+def main(message, port, keygen, clean, version, code, hint, local, zip):
 
 
 
@@ -183,19 +183,20 @@ def main(message, port, keygen, server, clean, version, code, hint, local, zip):
     key = ""
     print("Generating key: ", end="")  # Print message without new line
     for i in range(keygen):
-        digit = str(random.randint(1, 3))
+        digit = str(random.randint(1, 5))
         key += digit
         print(digit, end="")
     
     print("\r")
 
     converted = convert.translate(convert.key(key), message)
+    hint_encoded = convert.translate(convert.key(key), hint)
     hashed_code = hashed(code)
     
     data = {
         'message': converted,
         'code': hashed_code,
-        'hint': hint
+        'hint': hint_encoded
     }
 
     config = {
@@ -233,33 +234,33 @@ def main(message, port, keygen, server, clean, version, code, hint, local, zip):
     
     print("Remember to port forward port " + str(port)+ " on " + rs.get_ip(True))
 
-    if server:
-        if type_of_os == "windows":
-            exit("Sorry, this feature is for linux based OS's")
-        user = os.getlogin()
-        open("reliqua.service", "w+").write("""[Unit]
-Description=Reliqua server
-After=network.target
-[Service]
-User=""" + user + """
-Nice=1
-KillMode=none
-SuccessExitStatus=0 1
-ProtectHome=true
-ProtectSystem=full
-PrivateDevices=true
-NoNewPrivileges=true
-WorkingDirectory=""" + pwd + """
-ExecStart= /usr/bin/python3 """ + pwd +"""/reliqua_server.py
-[Install]
-WantedBy=multi-user.target
-            """)
-        shutil.copy2('reliqua.service', "/etc/systemd/system/", follow_symlinks=True)
-        os.system("sudo systemctl daemon-reload")
-        os.system("sudo systemctl start reliqua.service")
-        os.system("sudo systemctl enable reliqua.service")
-    else:
-        rs.http_server(port, local)
+#     if server:
+#         if type_of_os == "windows":
+#             exit("Sorry, this feature is for linux based OS's")
+#         user = os.getlogin()
+#         open("reliqua.service", "w+").write("""[Unit]
+# Description=Reliqua server
+# After=network.target
+# [Service]
+# User=""" + user + """
+# Nice=1
+# KillMode=none
+# SuccessExitStatus=0 1
+# ProtectHome=true
+# ProtectSystem=full
+# PrivateDevices=true
+# NoNewPrivileges=true
+# WorkingDirectory=""" + pwd + """
+# ExecStart= /usr/bin/python3 """ + pwd +"""/reliqua_server.py
+# [Install]
+# WantedBy=multi-user.target
+#             """)
+#         shutil.copy2('reliqua.service', "/etc/systemd/system/", follow_symlinks=True)
+#         os.system("sudo systemctl daemon-reload")
+#         os.system("sudo systemctl start reliqua.service")
+#         os.system("sudo systemctl enable reliqua.service")
+#     else:
+#         rs.http_server(port, local)
 
 if __name__ == '__main__':
     main()
