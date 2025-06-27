@@ -1,4 +1,1 @@
-python reliqua.py -m "We're no strangers to love^
-You know the rules and so do I (Do I)^
-A full commitment's what I'm thinking of^
-You wouldn't get this from any other guy" -p 8080 -k 8 -c weed -H "what is my favorite substance" -z -L
+python3 reliqua.py -m "test" -p 8080 -k 8 -c weed -H "whats my favorite substance" -z -L
