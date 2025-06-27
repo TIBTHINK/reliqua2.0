@@ -1,50 +1,30 @@
 @echo off
-setlocal enabledelayedexpansion
-
-:: Check for administrator privileges
->nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
-if %errorlevel% NEQ 0 (
-    echo.
-    echo This script requires Administrator privileges.
-    echo Right-click this file and select "Run as administrator".
-    pause
+:: Check if running as administrator
+net session >nul 2>&1
+if %errorlevel% neq 0 (
+    echo Requesting administrator privileges...
+    powershell -Command "Start-Process '%~f0' -Verb runAs"
     exit /b
 )
 
 :: Check if Python is installed
 where python >nul 2>&1
-if %errorlevel% NEQ 0 (
-    echo Python not found. Downloading and installing Python...
-
-    python3
-    echo Running Python installer...
-
-
-) else (
+if %errorlevel% equ 0 (
     echo Python is already installed.
+    python --version
+    exit /b
 )
 
-:: Refresh environment
-set PATH=%PATH%;%ProgramFiles%\Python312\Scripts;%ProgramFiles%\Python312\
+:: Install Python using winget
+echo Python not found. Installing using winget...
+winget install --id Python.Python.3 --source winget -e
 
-:: Upgrade pip
-echo Upgrading pip...
-python -m ensurepip
-python -m pip install --upgrade pip
-
-:: Install requirements
-if exist requirements.txt (
-    echo Installing packages from requirements.txt...
-    python -m pip install -r requirements.txt
-    if errorlevel 1 (
-        echo Failed to install some packages.
-        exit /b 1
-    )
+:: Confirm installation
+where python >nul 2>&1
+if %errorlevel% equ 0 (
+    echo Python installed successfully.
+    python --version
 ) else (
-    echo requirements.txt not found.
-    exit /b 1
+    echo Python installation failed.
 )
-
-echo.
-echo Script completed successfully.
 pause
