@@ -1,9 +1,14 @@
 # How to use
 
 ## Windows(beta)
-1. open a command prompt as a admin and run the start up script
+0. For some god known reason, making a script to setup this program in windows just doesnt seems to work \
+so here are the instuctions on how to install the required dependencies
+
+1. Download [python3](https://www.python.org/ftp/python/3.13.5/python-3.13.5-amd64.exe)
+
+2. in the folder that you were given run the following command
 ```cmd
-C:\Users\tibthnk\reliqua2.0> setup.bat
+C:\Users\tibthink\reliqua2.0\client\pip3 install -r requirements.txt
 ```
 if everything goes right you should be able to continue to step...
 
