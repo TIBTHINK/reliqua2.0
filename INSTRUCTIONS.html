@@ -1,56 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Script Instructions</title>
-    <style>
-        body {
-            background-color: black;
-            color: white;
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        code {
-            background-color: #333;
-            padding: 5px;
-            border-radius: 5px;
-            color: lightgreen;
-            display: block;
-            white-space: pre-wrap;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>How to Use</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 2em;
+    }
+    h1, h2 {
+      color: #fff;
+    }
+    code, pre {
+      background-color: #111;
+      color: #00aa00;
+      padding: 0.5em;
+      display: block;
+      border-radius: 4px;
+      margin: 0.5em 0;
+      white-space: pre-wrap;
+    }
+    a {
+      color: #3399ff;
+    }
+  </style>
 </head>
 <body>
-    <h1 id="how-to-use">How to use</h1>
-    <h2 id="windows-beta-">Windows (beta)</h2>
-    <ol>
-        <li>
-            <p>Open a command prompt as an admin and run the startup script:</p>
-            <pre><code class="lang-cmd">C:\Users\tibthnk\reliqua2.0> setup.bat</code></pre>
-            <p>If everything goes right you should be able to continue to the next step.</p>
-        </li>
-        <li>
-            <p>In a new command prompt (unless Python 3 was already installed), run this command to start the main program:</p>
-            <pre><code class="lang-cmd">C:\Users\tibthink\reliqua2.0> python3 reliqua_client.py</code></pre>
-        </li>
-        <li>
-            <p>The script should run after that. It will prompt you for a password. If you do not have the password, ask the person who sent you this and request the password.</p>
-        </li>
-    </ol>
-    <h2 id="linux-macos">Linux/MacOS</h2>
-    <ol>
-        <li>
-            <p>Open a terminal and run the following command (you need sudo/root privileges to run this):</p>
-            <pre><code class="lang-sh">tibthink@hal:~/reliqua2.0$ sudo ./setup.sh</code></pre>
-        </li>
-        <li>
-            <p>After that has completed successfully, you are now ready to run the script by executing the following command:</p>
-            <pre><code class="lang-sh">tibthink@hal:~/reliqua2.0$ python3 reliqua_client.py</code></pre>
-        </li>
-        <li>
-            <p>The script should run after that. It will prompt you for a password. If you do not have the password, ask the person who sent you this and request the password.</p>
-        </li>
-    </ol>
+
+<h1>How to use</h1>
+
+<h2>Windows(beta)</h2>
+<ol>
+  <li>For some god known reason, making a script to setup this program in windows just doesn’t seem to work<br>
+  so here are the instructions on how to install the required dependencies</li>
+
+  <li>Download <a href="https://www.python.org/ftp/python/3.13.5/python-3.13.5-amd64.exe">python3</a></li>
+
+  <li>In the folder that you were given run the following command:
+    <pre><code>C:\Users\tibthink\reliqua2.0\client\python3 -m pip install -r .\requirements.txt</code></pre>
+    If everything goes right you should be able to continue to step...
+  </li>
+
+  <li>In a new command prompt (unless python3 was already installed) run this command to run the main program:
+    <pre><code>C:\Users\tibthink\reliqua2.0&gt; python3 reliqua_client.py</code></pre>
+  </li>
+
+  <li>The script should run after that, it will prompt you with a password,<br>
+  if you do not have the password, ask the person who sent you this and<br>
+  request the password.</li>
+</ol>
+
+<h2>Linux/MacOS</h2>
+<ol>
+  <li>Open a terminal and run the following command (you need sudo/root to run this):
+    <pre><code>tibthink@hal:~/reliqua2.0$ sudo ./setup.sh</code></pre>
+  </li>
+
+  <li>After that has completed successfully you are now ready to run the script<br>
+  by running the following command:
+    <pre><code>tibthink@hal:~/reliqua2.0$ python3 reliqua_client.py</code></pre>
+  </li>
+
+  <li>The script should run after that, it will prompt you with a password,<br>
+  if you do not have the password, ask the person who sent you this and<br>
+  request the password.</li>
+</ol>
+
 </body>
 </html>

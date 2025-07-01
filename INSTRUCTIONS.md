@@ -8,7 +8,7 @@ so here are the instuctions on how to install the required dependencies
 
 2. in the folder that you were given run the following command
 ```cmd
-C:\Users\tibthink\reliqua2.0\client\pip3 install -r requirements.txt
+C:\Users\tibthink\reliqua2.0\client\python3 -m pip install -r .\requirements.txt
 ```
 if everything goes right you should be able to continue to step...
 
