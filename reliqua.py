@@ -221,7 +221,7 @@ def main(message, port, keygen, clean, version, code, hint, local, zip):
     shutil.copy2('config.json', pwd + '/client', follow_symlinks=True)
     shutil.copy2("INSTRUCTIONS.html", pwd + '/client', follow_symlinks=True)
     shutil.copy2("setup.sh", pwd + '/client' ,follow_symlinks=True)
-    shutil.copy2("setup.bat", pwd + '/client' ,follow_symlinks=True)
+    # shutil.copy2("setup.bat", pwd + '/client' ,follow_symlinks=True)
 
     
     if zip:
@@ -232,35 +232,8 @@ def main(message, port, keygen, clean, version, code, hint, local, zip):
     else:
         print("Send the client folder in your directory to the target") 
     
-    print("Remember to port forward port " + str(port)+ " on " + rs.get_ip(True))
-
-#     if server:
-#         if type_of_os == "windows":
-#             exit("Sorry, this feature is for linux based OS's")
-#         user = os.getlogin()
-#         open("reliqua.service", "w+").write("""[Unit]
-# Description=Reliqua server
-# After=network.target
-# [Service]
-# User=""" + user + """
-# Nice=1
-# KillMode=none
-# SuccessExitStatus=0 1
-# ProtectHome=true
-# ProtectSystem=full
-# PrivateDevices=true
-# NoNewPrivileges=true
-# WorkingDirectory=""" + pwd + """
-# ExecStart= /usr/bin/python3 """ + pwd +"""/reliqua_server.py
-# [Install]
-# WantedBy=multi-user.target
-#             """)
-#         shutil.copy2('reliqua.service', "/etc/systemd/system/", follow_symlinks=True)
-#         os.system("sudo systemctl daemon-reload")
-#         os.system("sudo systemctl start reliqua.service")
-#         os.system("sudo systemctl enable reliqua.service")
-#     else:
-#         rs.http_server(port, local)
-
+    print("Remember to port forward port " + str(port)+ " on " + rs.get_ip(local))
+    rs.http_server(port, local)
+#     
 if __name__ == '__main__':
     main()

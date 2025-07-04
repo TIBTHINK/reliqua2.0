@@ -47,13 +47,22 @@ sudo ./setup.sh
 Simple as that. if there are any errors please make a issue ticket and i will \
 try to respond to it as soon as possible
 
-### Windows (Beta)
-this should work for setting up for windows. 
+## Windows (Beta)
+0. For some god known reason, making a script to setup this program in windows just doesnt seems to work \
+so here are the instuctions on how to install the required dependencies
 
-to run this open a command prompt as a admin and type this command
+1. Download [python3](https://www.python.org/ftp/python/3.13.5/python-3.13.5-amd64.exe)
+
+2. in the folder that you were given run the following command
 ```cmd
-C:\Users\tibthnk\reliqua2.0> setup.bat
+C:\Users\tibthink\reliqua2.0> python3 -m pip install -r .\requirements.txt
 ```
-if any errors occure please make a issue ticket and i will \
-respond to it as soon as i am able too 
+if everything goes right you should be able to continue to step...
 
+## Usage
+1. in a new command prompt(unless python3 was already installed) run this command to run the main program \
+regardless of OS the command is the same
+
+```cmd
+C:\Users\tibthink\reliqua2.0> python3 reliqua.py -m "hello world" -p 8080 -k 8 -c "goodbye" -H "opposite of hello" -z
+```
