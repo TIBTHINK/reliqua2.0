@@ -37,7 +37,7 @@ Options:
 
 ```
 
-## Installing 
+## Installing Linux
 
 Ive made a script to do all the heavy lifiting. \
 To use it type in the following command into the shell.
@@ -47,7 +47,7 @@ sudo ./setup.sh
 Simple as that. if there are any errors please make a issue ticket and i will \
 try to respond to it as soon as possible
 
-## Windows (Beta)
+## Installing Windows (Beta)
 0. For some god known reason, making a script to setup this program in windows just doesnt seems to work \
 so here are the instuctions on how to install the required dependencies
 

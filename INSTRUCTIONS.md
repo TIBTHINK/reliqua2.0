@@ -4,7 +4,7 @@
 0. For some god known reason, making a script to setup this program in windows just doesnt seems to work \
 so here are the instuctions on how to install the required dependencies
 
-1. Download [python3](https://www.python.org/ftp/python/3.13.5/python-3.13.5-amd64.exe)
+1. Download [python3](https://www.python.org/ftp/python/3.13.5/python-3.13.5-amd64.exe) and install it
 
 2. in the folder that you were given run the following command
 ```cmd
