@@ -11,6 +11,7 @@ import platform
 import hashlib
 import sys
 import zipfile
+import base64
 
 ip = rs.get_ip()
 pwd = os.getcwd()
@@ -24,7 +25,7 @@ elif system == "darwin":
 else:
     type_of_os = "unix"
 
-import base64
+
 
 def remove_p(string):
     punctuation = '''"'''
@@ -121,8 +122,9 @@ def zip_folder(folder_path, output_filename):
 
 def main(message, port, keygen, clean, version, code, hint, local, zip):
 
-
-
+    if hint is None:
+        hint = "No hint was provided"
+        
     ip = rs.get_ip(local)
 
     if version:
