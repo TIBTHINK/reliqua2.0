@@ -196,7 +196,7 @@ def main(message, port, keygen, clean, version, code, hint, local, zip , ddns):
     hint_encoded = convert.translate(convert.key(key), hint)
     hashed_code = hashed(code)
     if ddns:
-        ip = ddns
+        ip = remove_p(ddns)
         print("Using ddns: " + str(ddns) + " instead of ip")
         
     data = {
