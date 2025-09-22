@@ -163,10 +163,10 @@ def hashed(password):
     hashed_password = hash_obj.hexdigest()
     return hashed_password
 
-def check_password(hashed_code):
+def check_password(hashed_code, unhashed_code_input):
     while True:  # Start an infinite loop
-        code_check = input("Enter the password: ")  
-        if remove_p(dump("code")) == hashed(code_check):  
+          
+        if hashlib.sha256(unhashed_code_input) == hashed(hashed_code):  
             print("Access granted!")
             break
         else:
@@ -183,7 +183,8 @@ if __name__ == '__main__':
         # Getting the hashed code directly from the dump function
         print("Hint: " + uconvert.translate(uconvert.key(config['key']), dump("hint")))
         code_to_check = remove_p(dump("code"))
-        check_password(code_to_check)  # Use the fetched code for checking
+        unhashed_code_input = input("Enter the code: ")
+        check_password(code_to_check, unhashed_code_input)  # Use the fetched code for checking
         print("\n")
         message = uconvert.translate(uconvert.key(config['key']), dump("message"))
         writing_effect(message)
