@@ -142,7 +142,8 @@ def remove_p(string):
             remove_punct = remove_punct + character
     return remove_punct
 def dump(object):
-    response = requests.get("http://" + config["ip"] + ":" + str(config["port"]) + "/data.json")
+    ip = remove_p(config["ip"])
+    response = requests.get("http://" + ip + ":" + str(config["port"]) + "/data.json")
     output = response.json()
     # data = json.dumps(output[object])
     return output[object]
