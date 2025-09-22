@@ -118,9 +118,10 @@ def zip_folder(folder_path, output_filename):
 @click.option("-z", "--zip", is_flag=True, flag_value=True, help="(optional) Will zip the client directory so it can be shared")
 @click.option("-C", "--clean", is_flag=True, flag_value=True, help="Reverts back to a clean slate (THIS WILL REMOVE EVERYTHING THAT ISNT ALREADY IN THE REPO)")
 @click.option("-L", "--local", is_flag=True, flag_value=True, help="Sets the config ip to your local address (Good for testing before using)")
+@click.option("--ddns", is_flag=True, flag_value=True, help="(optional) use a domain name instead of an ip (Advanced users only)")
 @click.option("-V", "--version", is_flag=True, flag_value = version, help="Current version: " + str(version), )
 
-def main(message, port, keygen, clean, version, code, hint, local, zip):
+def main(message, port, keygen, clean, version, code, hint, local, zip , ddns):
 
     if hint is None:
         hint = "No hint was provided"
@@ -194,7 +195,10 @@ def main(message, port, keygen, clean, version, code, hint, local, zip):
     converted = convert.translate(convert.key(key), message)
     hint_encoded = convert.translate(convert.key(key), hint)
     hashed_code = hashed(code)
-    
+    if ddns:
+        ip = ddns
+        print("Using ddns: " + str(ddns) + " instead of ip")
+        
     data = {
         'message': converted,
         'code': hashed_code,
