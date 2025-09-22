@@ -118,7 +118,7 @@ def zip_folder(folder_path, output_filename):
 @click.option("-z", "--zip", is_flag=True, flag_value=True, help="(optional) Will zip the client directory so it can be shared")
 @click.option("-C", "--clean", is_flag=True, flag_value=True, help="Reverts back to a clean slate (THIS WILL REMOVE EVERYTHING THAT ISNT ALREADY IN THE REPO)")
 @click.option("-L", "--local", is_flag=True, flag_value=True, help="Sets the config ip to your local address (Good for testing before using)")
-@click.option("--ddns", is_flag=True, flag_value=True, help="(optional) use a domain name instead of an ip (Advanced users only)")
+@click.option("-D", "--ddns", is_flag=True, flag_value=True, help="(optional) use a domain name instead of an ip (Advanced users only)")
 @click.option("-V", "--version", is_flag=True, flag_value = version, help="Current version: " + str(version), )
 
 def main(message, port, keygen, clean, version, code, hint, local, zip , ddns):
