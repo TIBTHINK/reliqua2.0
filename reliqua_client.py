@@ -6,9 +6,40 @@ import base64
 from time import sleep
 import sys
 import random
+import os
 
-with open("config.json") as config:
-    config = json.load(config)
+def get_resource_path(filename):
+    # Prefer explicit file in current working directory
+    if os.path.exists(filename):
+        return os.path.abspath(filename)
+
+    # If running as a bundled/frozen executable, try executable directory
+    if getattr(sys, 'frozen', False):
+        exe_dir = os.path.dirname(sys.executable) or os.path.dirname(os.path.abspath(sys.argv[0]))
+        candidate = os.path.join(exe_dir, filename)
+        if os.path.exists(candidate):
+            return candidate
+
+        # Also try the directory of argv[0]
+        argv_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+        candidate = os.path.join(argv_dir, filename)
+        if os.path.exists(candidate):
+            return candidate
+
+    # Fall back to the script directory
+    script_dir = os.path.dirname(__file__)
+    candidate = os.path.join(script_dir, filename)
+    if os.path.exists(candidate):
+        return candidate
+
+    # Not found; return original name so open() raises FileNotFoundError
+    return filename
+
+try:
+    with open(get_resource_path("config.json"), "r") as cfg_file:
+        config = json.load(cfg_file)
+except FileNotFoundError:
+    exit("Error: config.json not found. Make sure it's bundled or present next to the executable.")
 
 
 def fetch_data():
@@ -18,12 +49,12 @@ def fetch_data():
         response.raise_for_status()  # Will raise HTTPError for bad responses
         return response.json()
     except ConnectionError as e:
-        exit("Error Code: Connection refused.")
+        exit("""Error Code: Connection refused.
+             Please make sure that you port forward.""")
     except requests.exceptions.RequestException as e:
         exit("Error Code: An error occurred.")
     except Exception as e:
-        exit("""Error Code: Unexpected error.
-             Please make sure that you port forward.""")
+        exit("Error Code: Unexpected error.")
 
 def print_ascii_art():
     ascii_art = [
@@ -165,12 +196,24 @@ def hashed(password):
 
 def check_password(hashed_code, unhashed_code_input):
     while True:  # Start an infinite loop
-          
-        if hashlib.sha256(unhashed_code_input) == hashed(hashed_code):  
+        # Hash the user's input (encode to bytes) and compare hex digests
+        input_hash = hashlib.sha256(unhashed_code_input.encode()).hexdigest()
+        if input_hash == hashed_code:
             print("Access granted!")
             break
         else:
             print("Incorrect password, please try again.\n")
+            # unhashed_code_input = input("Enter the code: ")
+
+def get_resource_path(filename):
+        if getattr(sys, 'frozen', False):
+            # Running as compiled binary
+            base_path = os.path.dirname(sys.executable)
+        else:
+            # Running as normal Python
+            base_path = os.path.dirname(__file__)
+
+        return os.path.join(base_path, filename)
 
 if __name__ == '__main__':
     print("\n")
@@ -185,7 +228,7 @@ if __name__ == '__main__':
         code_to_check = remove_p(dump("code"))
         unhashed_code_input = input("Enter the code: ")
         check_password(code_to_check, unhashed_code_input)  # Use the fetched code for checking
-        print("\n")
+        print("\n") 
         message = uconvert.translate(uconvert.key(config['key']), dump("message"))
         writing_effect(message)
         print("\n")

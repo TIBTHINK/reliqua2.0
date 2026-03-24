@@ -95,16 +95,7 @@ class convert:
         return message
     
 class compile:
-    def get_resource_path(filename):
-        if getattr(sys, 'frozen', False):
-            # Running as compiled binary
-            base_path = os.path.dirname(sys.executable)
-        else:
-            # Running as normal Python
-            base_path = os.path.dirname(__file__)
-
-        return os.path.join(base_path, filename)
-
+    
     def compile_client():
         print("Compiling reliqua_client.py with Nuitka...")
 
@@ -129,6 +120,16 @@ def hashed(password):
     hashed_password = hash_obj.hexdigest()
     return hashed_password
 
+def get_resource_path(filename):
+    if getattr(sys, 'frozen', False):
+        # Running as compiled binary
+        base_path = os.path.dirname(sys.executable)
+    else:
+        # Running as normal Python
+        base_path = os.getcwd()
+
+    return os.path.join(base_path, filename)
+
 def zip_folder(folder_path, output_filename):
     with zipfile.ZipFile(output_filename, 'w', zipfile.ZIP_DEFLATED) as zipf:
         for root, _, files in os.walk(folder_path):
@@ -146,14 +147,14 @@ def zip_folder(folder_path, output_filename):
 @click.option("-c", "--code", help="Set the code to unlock the message")
 @click.option("-H", "--hint", default="No hint was provided", help="Sets a hint for what the code might be")
 # @click.option("-s", "--server", is_flag=True, flag_value=True, help="Runs the server in the backgroud and starts automaticly even if the computer shuts down (Linux only)")
-@click.option("--compile", is_flag=True, flag_value=True, help="(optional) Compiles the client into a binary using Nuitka")
+@click.option("-b","--build-client", is_flag=True, flag_value=True, help="(optional) Compiles the client into a binary using Nuitka")
 @click.option("-z", "--zip", is_flag=True, flag_value=True, help="(optional) Will zip the client directory so it can be shared")
 @click.option("-C", "--clean", is_flag=True, flag_value=True, help="Reverts back to a clean slate (THIS WILL REMOVE EVERYTHING THAT ISNT ALREADY IN THE REPO)")
 @click.option("-L", "--local", is_flag=True, flag_value=True, help="Sets the config ip to your local address (Good for testing before using)")
 @click.option("-D", "--ddns", help="(optional) use a domain name instead of an ip (Advanced users only)")
 @click.option("-V", "--version", is_flag=True, flag_value = version, help="Current version: " + str(version), )
 
-def main(message, port, keygen, clean, version, code, hint, local, zip , ddns, compile):
+def main(message, port, keygen, clean, version, code, hint, local, zip , ddns, build_client):
 
     if hint is None:
         hint = "No hint was provided"
@@ -177,9 +178,13 @@ def main(message, port, keygen, clean, version, code, hint, local, zip , ddns, c
             "data.json",
             "__pycache__/",
             "client/",
-            "client.zip"
+            "client.zip",
+            "reliqua_client.exe" if os.name == "nt" else "reliqua_client.bin", 
+            "reliqua_client.build/",
+            "reliqua_client.dist/",
+            "reliqua_client.onefile-build/"
         ]
-        
+               
         for item in item_list:
             try:
                 if os.path.isfile(item):
@@ -248,9 +253,10 @@ def main(message, port, keygen, clean, version, code, hint, local, zip , ddns, c
 
     with open('config.json', 'w', encoding='utf-8') as f:
         json.dump(config, f, ensure_ascii=False, indent=4)
-    compile.compile_client_with_config()
+    if build_client:
+        compile.compile_client()
 
-    with open(compile.get_resource_path('config.json'), "r") as f:
+    with open(get_resource_path('config.json'), "r") as f:
         config = json.load(f)
 
     
@@ -261,7 +267,7 @@ def main(message, port, keygen, clean, version, code, hint, local, zip , ddns, c
         os.mkdir(path)
 
 
-    if not compile:
+    if not build_client:
         shutil.copy2('reliqua_client.py', pwd + '/client', follow_symlinks=True)
         shutil.copy2('config.json', pwd + '/client', follow_symlinks=True)
         shutil.copy2("INSTRUCTIONS.html", pwd + '/client', follow_symlinks=True)
@@ -269,7 +275,7 @@ def main(message, port, keygen, clean, version, code, hint, local, zip , ddns, c
     else:
         exe_name = "reliqua_client.exe" if os.name == "nt" else "reliqua_client"
         if os.path.exists(exe_name):
-            shutil.move(exe_name, os.path.join("client", exe_name))
+            shutil.copy2(exe_name, os.path.join("/client", exe_name))
     # shutil.copy2("setup.bat", pwd + '/client' ,follow_symlinks=True)
 
     
@@ -277,7 +283,7 @@ def main(message, port, keygen, clean, version, code, hint, local, zip , ddns, c
         print("zipping folder")
         zip_folder("./client", "client.zip")
         print("folder zipped and ready to ship")
-        shutil.copy2("client.zip", pwd + '/client' , follow_symlinks=True)
+        # shutil.copy2("client.zip", pwd + '/client' , follow_symlinks=True)
     else:
         print("Send the client folder in your directory to the target") 
     

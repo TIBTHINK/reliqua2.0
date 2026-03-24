@@ -8,3 +8,13 @@ __pycache__/
 
 # Ignore the client directory and all its contents
 client/
+
+# Ignore the compiled client executable (both Windows and Unix-like)
+reliqua_client.exe
+reliqua_client
+reliqua_client.bin
+
+# Ignore build directories created by Nuitka
+reliqua_client.build/
+reliqua_client.dist/
+reliqua_client.onefile-build/
