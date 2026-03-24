@@ -12,11 +12,12 @@ import hashlib
 import sys
 import zipfile
 import base64
+import subprocess
 
 ip = rs.get_ip()
 pwd = os.getcwd()
 system = platform.system()
-version = "2.2.1"
+version = "2.3.0"
 
 if system == "Windows":
     type_of_os = "windows"
@@ -92,7 +93,35 @@ class convert:
             else:
                 return print("ERROR: Key out of range")
         return message
+    
+class compile:
+    def get_resource_path(filename):
+        if getattr(sys, 'frozen', False):
+            # Running as compiled binary
+            base_path = os.path.dirname(sys.executable)
+        else:
+            # Running as normal Python
+            base_path = os.path.dirname(__file__)
 
+        return os.path.join(base_path, filename)
+
+    def compile_client():
+        print("Compiling reliqua_client.py with Nuitka...")
+
+        try:
+            subprocess.run([
+                sys.executable, "-m", "nuitka",
+                "--onefile",
+                "--standalone",
+                "--follow-imports",
+                "--include-data-files=config.json=config.json",
+                "reliqua_client.py"
+            ], check=True)
+
+            print("Compilation successful!")
+
+        except subprocess.CalledProcessError:
+            print("Compilation failed")
     
 def hashed(password):
     # Create a hash using SHA-256
@@ -108,6 +137,8 @@ def zip_folder(folder_path, output_filename):
                 arcname = os.path.relpath(file_path, folder_path)
                 zipf.write(file_path, arcname)
 
+
+
 @click.command()
 @click.option("-m", "--message", help="Sets your message")
 @click.option("-p", "--port", default=8080, help="Sets the port you want the server to run on")
@@ -115,13 +146,14 @@ def zip_folder(folder_path, output_filename):
 @click.option("-c", "--code", help="Set the code to unlock the message")
 @click.option("-H", "--hint", default="No hint was provided", help="Sets a hint for what the code might be")
 # @click.option("-s", "--server", is_flag=True, flag_value=True, help="Runs the server in the backgroud and starts automaticly even if the computer shuts down (Linux only)")
+@click.option("--compile", is_flag=True, flag_value=True, help="(optional) Compiles the client into a binary using Nuitka")
 @click.option("-z", "--zip", is_flag=True, flag_value=True, help="(optional) Will zip the client directory so it can be shared")
 @click.option("-C", "--clean", is_flag=True, flag_value=True, help="Reverts back to a clean slate (THIS WILL REMOVE EVERYTHING THAT ISNT ALREADY IN THE REPO)")
 @click.option("-L", "--local", is_flag=True, flag_value=True, help="Sets the config ip to your local address (Good for testing before using)")
 @click.option("-D", "--ddns", help="(optional) use a domain name instead of an ip (Advanced users only)")
 @click.option("-V", "--version", is_flag=True, flag_value = version, help="Current version: " + str(version), )
 
-def main(message, port, keygen, clean, version, code, hint, local, zip , ddns):
+def main(message, port, keygen, clean, version, code, hint, local, zip , ddns, compile):
 
     if hint is None:
         hint = "No hint was provided"
@@ -213,8 +245,15 @@ def main(message, port, keygen, clean, version, code, hint, local, zip , ddns):
 
     with open('data.json', 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
+
     with open('config.json', 'w', encoding='utf-8') as f:
         json.dump(config, f, ensure_ascii=False, indent=4)
+    compile.compile_client_with_config()
+
+    with open(compile.get_resource_path('config.json'), "r") as f:
+        config = json.load(f)
+
+    
 # http://pioxy.ddns.net:3000/tibthink/minecraft-server/src/branch/main/init-server.py#L222
     folder_check = os.path.exists(pwd + "/client") 
     if not folder_check:
@@ -222,11 +261,15 @@ def main(message, port, keygen, clean, version, code, hint, local, zip , ddns):
         os.mkdir(path)
 
 
-
-    shutil.copy2('reliqua_client.py', pwd + '/client', follow_symlinks=True)
-    shutil.copy2('config.json', pwd + '/client', follow_symlinks=True)
-    shutil.copy2("INSTRUCTIONS.html", pwd + '/client', follow_symlinks=True)
-    shutil.copy2("setup.sh", pwd + '/client' ,follow_symlinks=True)
+    if not compile:
+        shutil.copy2('reliqua_client.py', pwd + '/client', follow_symlinks=True)
+        shutil.copy2('config.json', pwd + '/client', follow_symlinks=True)
+        shutil.copy2("INSTRUCTIONS.html", pwd + '/client', follow_symlinks=True)
+        shutil.copy2("setup.sh", pwd + '/client' ,follow_symlinks=True)
+    else:
+        exe_name = "reliqua_client.exe" if os.name == "nt" else "reliqua_client"
+        if os.path.exists(exe_name):
+            shutil.move(exe_name, os.path.join("client", exe_name))
     # shutil.copy2("setup.bat", pwd + '/client' ,follow_symlinks=True)
 
     
