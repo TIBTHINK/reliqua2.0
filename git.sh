@@ -13,7 +13,7 @@ useremail=""
 
 # Define help menu
 help_menu() {
-  echo "Usage: ./git-script.sh -aDd -b <branch> -n <name> -c <msg>"
+  echo "Usage: ./git.sh -aDd -b <branch> -n <name> -c <msg>"
   echo ""
   echo "OPTIONS:"
   echo "  -a, --all              add all changes"

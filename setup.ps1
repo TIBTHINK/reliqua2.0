@@ -36,7 +36,7 @@ function Winget-Install($id, $name) {
         winget install --id $id -e --accept-package-agreements --accept-source-agreements --silent
         return $true
     } catch {
-        Write-Warning "winget failed to install $name: $_"
+        Write-Warning "winget failed to install ${name}: $_"
         return $false
     }
 }
@@ -47,7 +47,7 @@ function Install-Winget {
         return $true
     }
 
-    Write-Host "winget not found — attempting to install Windows Package Manager from GitHub releases..."
+    Write-Host "winget not found - attempting to install Windows Package Manager from GitHub releases..."
 
     try {
         $apiUrl = 'https://api.github.com/repos/microsoft/winget-cli/releases/latest'
@@ -66,7 +66,7 @@ function Install-Winget {
         Add-AppxPackage -Path $tmp -ErrorAction Stop
 
         Remove-Item $tmp -ErrorAction SilentlyContinue
-        Write-Host "winget (App Installer) installed — please restart the shell if necessary."
+        Write-Host "winget (App Installer) installed - please restart the shell if necessary."
         return $true
     } catch {
         Write-Warning "Failed to install winget automatically: $_"
@@ -96,7 +96,7 @@ function Ensure-Python {
 
 function Ensure-MSYS2 {
     # MSYS2 provides mingw-w64 toolchains on Windows
-    if (Test-Path "C:\msys64" -or (Cmd-Exists pacman)) {
+    if ((Test-Path "C:\msys64") -or (Cmd-Exists pacman)) {
         Write-Host "MSYS2 or mingw toolchain seems present."
         return $true
     }
@@ -133,8 +133,14 @@ function Ensure-PipAndInstallRequirements {
         return $true
     }
 
-    Write-Host "Installing Python packages from requirements.txt..."
-    & $pyCmd -m pip install -r $req
+    Write-Host "Installing Python packages from requirements.txt (system-wide)..."
+    try {
+        $sysPrefix = & $pyCmd -c "import sys; print(sys.prefix)"
+        & $pyCmd -m pip install --upgrade -r $req --prefix $sysPrefix
+    } catch {
+        Write-Warning "System-wide pip install failed: $_. Falling back to default pip install."
+        & $pyCmd -m pip install -r $req
+    }
 }
 
 # ----- Script start -----
@@ -143,7 +149,7 @@ Abort-IfNotAdmin
 Write-Host "Starting Windows setup: Python3, MSYS2 (mingw), pip requirements"
 
 if (-not (Cmd-Exists winget)) {
-    Write-Host "winget not detected — attempting to install winget (App Installer)..."
+    Write-Host "winget not detected - attempting to install winget (App Installer)..."
     $wingetInstalled = Install-Winget
     if (-not $wingetInstalled) {
         Write-Warning "winget installation failed or was not completed. winget-based installs may not work." 
@@ -160,4 +166,4 @@ if (-not $pythonOk) {
 
 Ensure-PipAndInstallRequirements
 
-Write-Host "Setup completed. If MSYS2 was installed, open MSYS2 shell and run 'pacman -Syu' then install mingw-w64 packages as needed."
+Write-Host 'Setup completed. If MSYS2 was installed, open MSYS2 shell and run pacman -Syu then install mingw-w64 packages as needed.'

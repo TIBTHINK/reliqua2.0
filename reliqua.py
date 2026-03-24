@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import json
 import base64
@@ -95,24 +95,51 @@ class convert:
         return message
     
 class compile:
-    
     def compile_client():
         print("Compiling reliqua_client.py with Nuitka...")
 
+        # Use absolute paths and make command robust for Windows
+        client_script = os.path.join(pwd, 'reliqua_client.py')
+        include_spec = 'config.json=config.json'
+        cmd = [
+            sys.executable, '-m', 'nuitka',
+            '--onefile',
+            '--standalone',
+            '--follow-imports',
+            f'--include-data-files={include_spec}',
+            client_script
+        ]
+
+        # Ensure Nuitka module is available in this Python interpreter; try to install if missing
         try:
-            subprocess.run([
-                sys.executable, "-m", "nuitka",
-                "--onefile",
-                "--standalone",
-                "--follow-imports",
-                "--include-data-files=config.json=config.json",
-                "reliqua_client.py"
-            ], check=True)
+            check = subprocess.run([sys.executable, '-m', 'nuitka', '--version'], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except subprocess.CalledProcessError as e:
+            stderr = e.stderr.decode(errors='ignore') if e.stderr else ''
+            if 'No module named' in stderr or 'ModuleNotFoundError' in stderr:
+                print('Nuitka module not found in this Python. Attempting to install via pip (user install)...')
+                try:
+                    subprocess.run([sys.executable, '-m', 'pip', 'install', '--user', 'nuitka', 'ziglang'], check=True)
+                    print('Nuitka installation succeeded, retrying compilation...')
+                except subprocess.CalledProcessError:
+                    print('Failed to install Nuitka into this Python environment.\nPlease run:')
+                    print(f"{sys.executable} -m pip install --user nuitka")
+                    print('Or install CPython from python.org and ensure pip works. Aborting compilation.')
+                    return
+            else:
+                print('Error checking Nuitka availability:', stderr)
+                return
+        except FileNotFoundError:
+            print('Python executable not found. Aborting compilation.')
+            return
 
+        # Run the actual compilation
+        try:
+            subprocess.run(cmd, check=True, cwd=pwd)
             print("Compilation successful!")
-
-        except subprocess.CalledProcessError:
-            print("Compilation failed")
+        except subprocess.CalledProcessError as e:
+            print("Compilation failed:", e)
+        except FileNotFoundError:
+            print("Nuitka or required tool not found. Ensure build toolchain (Zig or MSVC) is available.")
     
 def hashed(password):
     # Create a hash using SHA-256
@@ -261,21 +288,26 @@ def main(message, port, keygen, clean, version, code, hint, local, zip , ddns, b
 
     
 # http://pioxy.ddns.net:3000/tibthink/minecraft-server/src/branch/main/init-server.py#L222
-    folder_check = os.path.exists(pwd + "/client") 
+    folder_check = os.path.exists(os.path.join(pwd, "client"))
     if not folder_check:
         path = os.path.join(pwd, "client")
         os.mkdir(path)
 
 
+    client_dir = os.path.join(pwd, 'client')
     if not build_client:
-        shutil.copy2('reliqua_client.py', pwd + '/client', follow_symlinks=True)
-        shutil.copy2('config.json', pwd + '/client', follow_symlinks=True)
-        shutil.copy2("INSTRUCTIONS.html", pwd + '/client', follow_symlinks=True)
-        shutil.copy2("setup.sh", pwd + '/client' ,follow_symlinks=True)
+        shutil.copy2(os.path.join(pwd, 'reliqua_client.py'), client_dir, follow_symlinks=True)
+        shutil.copy2(os.path.join(pwd, 'config.json'), client_dir, follow_symlinks=True)
+        shutil.copy2(os.path.join(pwd, 'INSTRUCTIONS.html'), client_dir, follow_symlinks=True)
+        # Copy setup script appropriate for platform
+        setup_src = os.path.join(pwd, 'setup.ps1') if os.name == 'nt' else os.path.join(pwd, 'setup.sh')
+        if os.path.exists(setup_src):
+            shutil.copy2(setup_src, client_dir, follow_symlinks=True)
     else:
         exe_name = "reliqua_client.exe" if os.name == "nt" else "reliqua_client"
-        if os.path.exists(exe_name):
-            shutil.copy2(exe_name, os.path.join("/client", exe_name))
+        exe_path = os.path.join(pwd, exe_name)
+        if os.path.exists(exe_path):
+            shutil.copy2(exe_path, os.path.join(client_dir, exe_name))
     # shutil.copy2("setup.bat", pwd + '/client' ,follow_symlinks=True)
 
     

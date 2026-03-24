@@ -66,13 +66,15 @@ C:\Users\tibthink\reliqua2.0> python3 -m pip install -r .\requirements.txt
 If everything goes right, you should be able to continue to step...
 
 ## Usage
-1. In a new Command Prompt (unless Python3 was already installed), run this command to run the main program. \
+1. you will need to run regardless of os as a admin
+
+2. In a new Command Prompt (unless Python3 was already installed), run this command to run the main program. \
 Regardless of OS, the command is the same:
 
 ```cmd
 C:\Users\tibthink\reliqua2.0> python3 reliqua.py -m "hello world" -p 8080 -k 8 -c "goodbye" -H "opposite of hello" -z
 ```
-2. Make sure that you port forward your IP with the correct port. \
+3. Make sure that you port forward your IP with the correct port. \
 If you don't know how, there are [many](https://www.noip.com/support/knowledgebase/general-port-forwarding-guide) resources to find out how to.
 
 ## Compiling
