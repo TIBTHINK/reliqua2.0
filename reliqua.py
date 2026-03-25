@@ -98,6 +98,24 @@ class compile:
     def compile_client():
         print("Compiling reliqua_client.py with Nuitka...")
 
+        # Best-effort check for presence of the Python import library used by linkers.
+        try:
+            import sysconfig, os
+            lib_name = f"python{sys.version_info.major}{sys.version_info.minor}"
+            lib_dir = sysconfig.get_config_var('LIBDIR') or sysconfig.get_config_var('LIBPL')
+            if lib_dir:
+                expected = os.path.join(lib_dir, lib_name + ('.lib' if os.name == 'nt' else '.a'))
+                if not os.path.exists(expected):
+                    print('\nWarning: Python import library not found - Nuitka build may fail when linking.')
+                    print(f'Expected import library at: {expected}')
+                    print('If you are using the Microsoft Store Python, consider installing the official')
+                    print('CPython from https://www.python.org/downloads/ so the linker can access the import library.\n')
+            else:
+                print('\nWarning: Could not determine Python library directory (sysconfig returned no LIBDIR).')
+                print('This may indicate a restricted or non-standard Python installation; Nuitka linking may fail.\n')
+        except Exception:
+            # Non-fatal: detection is best-effort only.
+            pass
         # Use absolute paths and make command robust for Windows
         client_script = os.path.join(pwd, 'reliqua_client.py')
         include_spec = 'config.json=config.json'
